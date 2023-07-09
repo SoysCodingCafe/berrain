@@ -1,78 +1,27 @@
-# Bevy GitHub CI Template
+# Berrain
 
-This repo show how to set up CI on a GitHub project for Bevy.
+The low hum of chanting resonates through the air as the morning mists dissipate through the trees like dispelled spirits. You watch over all from atop your cloud, berry in hand, ready to provide vital sustenance to those you deem worthy. Shall you be a benevolent god and provide for your worshippers? Or shall you find ways to torture and torment them? Only you can decide in...
 
-It creates two workflows:
+BERRAIN
 
-* [CI](#CI)
-* [Release](#Release)
+Berrain is a god-sim game where you have control over who lives and who starves. Listen to your worshippers' demands or ignore their pleas, the choice is yours. However, you may want to ask yourself how you would like to be treated if your roles were reversed...
 
-## CI
+​CONTROLS
 
-Definition: [.github/workflows/ci.yaml](./.github/workflows/ci.yaml)
+A/D - Move left/right.
 
-This workflow runs on every commit to `main` branch, and on every PR targeting the `main` branch.
+Left Click/Spacebar - Drop a berry.
 
-It will use rust stable on linux, with cache between different executions, those commands:
+Right Click/F - Speed up time.
 
-* `cargo test`
-* `cargo clippy -- -D warnings`
-* `cargo fmt --all -- --check`
+I ran out of time to implement a reset so just refresh the page/restart the game, sorry!
+Detailed Gameplay Explanation
 
-If you are using anything OS specific or rust nightly, you should update the file [ci.yaml](./.github/workflows/ci.yaml) to use those.
+I recommend playing the game at least once before reading this section! This will spoil certain mechanics which I hope are easy enough to work out, but if you are struggling/confused then read on!
 
-## Release
+You start as the green entity on the cloud, the current Bergod (berry god :P ), but every new day at dawn you trade places with one of your worshippers. Worshippers will slowly fade to white as they get hungrier, and can hold a maximum of two berries at a time. Any time a worshipper touches the berry shrine to the left of the screen the current Bergod regains a berry. 
 
-Definition: [.github/workflows/release.yaml](./.github/workflows/release.yaml)
+As Bergod your goal is to keep all your worshippers alive, though they will move faster as they get hungrier and panic, allowing you to generate berries faster. If all your worshippers die, or you starve as one of them, it's game over. As a worshipper you must balance your time between collecting berries and worshipping at the shrine.
 
-This workflow runs on every tag.
-
-It will build:
-* For Linux and Windows, a .zip archive containing the executable and the `assets`.
-* For macOS, a dmg image with a .app containing the assets.
-* For wasm, a .zip archive with the wasm binary, the js bindings, an html file loading it, and the assets.
-
-If you don't want to target some of those platforms, you can remove the corresponding job from the file [release.yaml](./.github/workflows/release.yaml).
-
-If you don't want to attach the builds to the GitHub release, set `env.add_binaries_to_github_release` to `false`.
-
-### Git Tag from GitHub UI
-
-You can follow [Managing releases in a repository](https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository)
-
-### Git Tag from the CLI
-
-Execute the following commands: 
-
-```sh
-git tag -a "my-game-1.0" -m "First official release"
-git push --tags
-```
-
-### Result
-
-A new release will be available in GitHub, with the archives per platform available as downloadable assets.
-
-The `git` commands above produced this release: [my-game-1.0](
-https://github.com/bevyengine/bevy_github_ci_template/releases/tag/my-game-1.0).
-
-## Using the workflows in your own project
-
-If you would like to use the GitHub workflows included here for your own project, there are a few things you might have to adapt:
-
-1. The release workflow relies on the `index.html` file under `/wasm` for web builds
-2. Make sure that the env variable `binary` ([release.yaml](.github/workflows/release.yaml#L10)) matches the name of your binary
-3. In case your project doesn't have an `assets` folder
-   1. Either create one and put a `.gitkeep` file in it to be able to push it
-   2. Or remove the `cp -r assets` statements in the build jobs
-4. Adapt the used toolchain if you are using nightly
-
-### Publish on itch.io
-
-The release flow can be configured to push the releases to itch.io:
-
-1. Create an API key in https://itch.io/user/settings/api-keys
-2. Go to the repository's Settings tab in GitHub, click on Secrets->Actions in the sidebar,and add a repository secret named `BUTLER_CREDENTIALS` set to the API key.
-3. Uncomment `env.itch_target` in `release.yaml` and set it to the itch.io username and the name of the game on itch.io, separated by a slash (`/`)
-
-Once that is done, any tag pushed to GitHub will trigger an itch.io release and use the tag as the [user version](https://itch.io/docs/butler/pushing.html#specifying-your-own-version-number).
+Berries that land on the ground become bushes which grow new berries to be collected after a short delay. You can also drop berries in the volcano which angers the worshippers, giving them a slight speed increase! A worshipper will eat a berry even if they aren't particularly hungry, so it is better to wait until they start to fade.
+When a worshipper takes your place they will dispense any remaining berries you had, but when you return to take your place as Bergod then you will be given 5 berries (so you aren't stuck with nothing). I didn't have enough time to implement a better Bergod AI so they currently just throw out berries as fast as possible!
